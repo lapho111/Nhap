@@ -1,15 +1,20 @@
-// YouTube5_Offline.js - Xử lý tải xuống ngoại tuyến 720p/1080p
-// Tạo bởi Grok 3 (xAI) cho mày!
+// YouTube_Offline.js - Hỗ trợ tải 720p/1080p ngoại tuyến
+// Đã sửa lại protobuf + chặn DRM
 
 var w = {
-    getInstance: (name) => ({ name, debug: (msg) => console.log(`${name}: ${msg}`) }),
+    getInstance: (name) => ({ 
+        name, 
+        debug: (msg) => console.log(`${name}: ${msg}`) 
+    }),
     decodeParams: (e) => {
         let arg = typeof $argument === "string" && $argument.includes("{") ? JSON.parse($argument) : {};
-        return Object.assign({ debug: true }, arg);
+        return Object.assign({ debug: false }, arg);
     },
 };
 
-// Giả lập lớp cơ bản tương thích với protobuf của YouTube5.js
+// Import thư viện protobuf
+const protobuf = require("protobufjs");
+
 class OfflineHandler {
     constructor() {
         this.name = "YouTubeOffline";
@@ -19,18 +24,18 @@ class OfflineHandler {
         w.debug(`${this.name}: Initialized`);
     }
 
-    fromBinary(data) {
+    async fromBinary(data) {
         if (data instanceof Uint8Array) {
-            // Giả lập xử lý binary như YouTube5.js (mày cần thay bằng logic protobuf thực tế từ file gốc nếu cần)
-            this.message = { streamingData: {} }; // Placeholder, thay bằng this.msgType.fromBinary(data) nếu có protobuf
             w.debug(`${this.name}: bodyBytesSize: ${Math.floor(data.length / 1024)} kb`);
+
             try {
-                // Thử parse dữ liệu binary thành object (cần logic protobuf chính xác)
-                let decoded = new TextDecoder().decode(data); // Tạm thời dùng TextDecoder, thay bằng protobuf nếu cần
-                this.message = JSON.parse(decoded); // Giả định dữ liệu là JSON, cần thay nếu là protobuf
+                // Parse dữ liệu protobuf
+                const root = await protobuf.load("youtube.proto");
+                const PlayerResponse = root.lookupType("youtube.PlayerResponse");
+                this.message = PlayerResponse.decode(data);
             } catch (e) {
-                w.debug(`${this.name}: Failed to parse binary data, assuming raw streamingData: ${e}`);
-                this.message.streamingData = { formats: [], adaptiveFormats: [] }; // Fallback
+                w.debug(`${this.name}: Failed to parse binary data, using raw streamingData`);
+                this.message.streamingData = { formats: [], adaptiveFormats: [] };
             }
             return this;
         }
@@ -44,37 +49,46 @@ class OfflineHandler {
             let originalAdaptiveFormats = this.message.streamingData.adaptiveFormats || [];
 
             let highQualityFormats = [...originalFormats, ...originalAdaptiveFormats].filter(format => {
-                return [22, 136, 137, 18].includes(format.itag); // 720p: 22, 136; 1080p: 137, 18
+                return [22, 136, 137].includes(format.itag); // 720p: 22, 136 | 1080p: 137
             });
 
             if (highQualityFormats.length > 0) {
-                w.debug(`${this.name}: Detected high-quality formats:`, highQualityFormats.map(f => ({ itag: f.itag, quality: f.quality })));
-                this.message.streamingData.formats = originalFormats;
-                this.message.streamingData.adaptiveFormats = originalAdaptiveFormats;
+                w.debug(`${this.name}: High-quality formats found, unlocking...`);
+                
+                // Gỡ bỏ kiểm tra Premium
+                highQualityFormats.forEach(format => {
+                    format.premiumOnly = false;
+                    format.url = format.url.replace("signature=", "bypass_signature=");
+                });
+
+                this.message.streamingData.formats = [...originalFormats, ...highQualityFormats];
+                this.message.streamingData.adaptiveFormats = [...originalAdaptiveFormats, ...highQualityFormats];
                 this.modified = true;
-                w.debug(`${this.name}: Enabled offline download support.`);
             } else {
                 w.debug(`${this.name}: No high-quality formats found.`);
             }
         } else {
-            w.debug(`${this.name}: No streamingData found in response.`);
+            w.debug(`${this.name}: No streamingData found.`);
         }
     }
 
-    toBinary() {
+    async toBinary() {
         if (this.modified) {
-            // Giả lập chuyển lại thành binary (cần thay bằng protobuf.toBinary nếu dùng protobuf)
-            let data = new TextEncoder().encode(JSON.stringify(this.message));
+            // Convert protobuf về binary
+            const root = await protobuf.load("youtube.proto");
+            const PlayerResponse = root.lookupType("youtube.PlayerResponse");
+            let data = PlayerResponse.encode(this.message).finish();
+
             w.debug(`${this.name}: Converted to binary, size: ${Math.floor(data.length / 1024)} kb`);
             return data;
         }
         return $request.bodyBytes;
     }
 
-    done() {
+    async done() {
         if (this.modified) {
             w.debug(`${this.name}: Modified response for offline download.`);
-            $done({ bodyBytes: this.toBinary() });
+            $done({ bodyBytes: await this.toBinary() });
         } else {
             w.debug(`${this.name}: No changes needed.`);
             $done();
@@ -82,12 +96,24 @@ class OfflineHandler {
     }
 }
 
-// Khởi chạy
-let wInstance = w.getInstance("YouTubeOffline");
-let requestBody = $request.bodyBytes || new Uint8Array();
-let offlineHandler = new OfflineHandler().fromBinary(requestBody);
+// Chặn DRM
+const drmBlockList = [
+    "https://www.youtube.com/api/timedtext?",
+    "https://youtubei.googleapis.com/get_video_info",
+    "https://youtubei.googleapis.com/widevine"
+];
 
-(async () => {
-    offlineHandler.enableOfflineDownload();
-    offlineHandler.done();
-})();
+if (drmBlockList.some(url => $request.url.includes(url))) {
+    w.debug("Blocking DRM request: " + $request.url);
+    $done({ status: 403, body: "" });
+} else {
+    let wInstance = w.getInstance("YouTubeOffline");
+    let requestBody = $request.bodyBytes || new Uint8Array();
+    let offlineHandler = new OfflineHandler();
+    
+    (async () => {
+        await offlineHandler.fromBinary(requestBody);
+        offlineHandler.enableOfflineDownload();
+        await offlineHandler.done();
+    })();
+}
