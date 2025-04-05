@@ -561,7 +561,7 @@ reloadBtn.addEventListener('touchend', () => {
         // Sau khi bạn đã thêm các nút vào container (nút Bypass và nút Đổi Nhiệm Vụ)
 
 // Tạo phần tử "Báo Lỗi"
-const errorLink = document.createElement('b');
+const errorLink = document.createElement('a');
 errorLink.textContent = 'Báo Lỗi'; // Dòng chữ "Báo Lỗi"
 
 
