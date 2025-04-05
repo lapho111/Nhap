@@ -571,14 +571,12 @@ errorLink.style.marginTop = '10px'; // Khoảng cách với các nút trên
 errorLink.style.fontStyle = 'italic';        
 errorLink.style.textAlign = 'center';
 errorLink.style.backgroundSize = '200% auto';
-errorLink.style.color = '#FFD700'; // Màu chữ vàng óng
+errorLink.style.color = '#FF0000'; // Màu chữ đỏ
         errorLink.style.backgroundClip = 'text';
        errorLink.style.webkitBackgroundClip = 'text';
         errorLink.style.textDecoration = 'underline'; 
         errorLink.href = 'https://facebook.com/lapho111'; // Đường link dẫn tới Facebook
    
-errorLink.style.display = 'block'; // Đảm bảo phần tử hiển thị dưới dạng block
-
 container.appendChild(errorLink);  // Thêm phần tử vào container
 
 
