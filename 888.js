@@ -576,6 +576,7 @@ errorLink.style.color = '#FF0000'; // Màu chữ đỏ
        errorLink.style.webkitBackgroundClip = 'text';
         errorLink.style.textDecoration = 'underline'; 
         errorLink.href = 'https://facebook.com/lapho111'; // Đường link dẫn tới Facebook
+        errorLink.target = '_blank';
    
 container.appendChild(errorLink);  // Thêm phần tử vào container
 
