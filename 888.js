@@ -561,20 +561,25 @@ reloadBtn.addEventListener('touchend', () => {
         // Sau khi bạn đã thêm các nút vào container (nút Bypass và nút Đổi Nhiệm Vụ)
 
 // Tạo phần tử "Báo Lỗi"
-const errorLink = document.createElement('a');
+const errorLink = document.createElement('b');
 errorLink.textContent = 'Báo Lỗi'; // Dòng chữ "Báo Lỗi"
-errorLink.style.textDecoration = 'underline'; // Gạch chân chữ
-errorLink.style.color = '#FFD700'; // Màu chữ vàng óng
+
+
 errorLink.style.fontSize = '16px'; // Kích thước chữ
 errorLink.style.fontWeight = 'bold';
 errorLink.style.marginTop = '10px'; // Khoảng cách với các nút trên
+errorLink.style.fontStyle = 'italic';        
+errorLink.style.textAlign = 'center';
+errorLink.style.backgroundSize = '200% auto';
+errorLink.style.color = '#FFD700'; // Màu chữ vàng óng
+        errorLink.style.backgroundClip = 'text';
+       errorLink.style.webkitBackgroundClip = 'text';
+        errorLink.style.textDecoration = 'underline'; 
+        errorLink.href = 'https://facebook.com/lapho111'; // Đường link dẫn tới Facebook
+   
 errorLink.style.display = 'block'; // Đảm bảo phần tử hiển thị dưới dạng block
-errorLink.style.textAlign = 'center'; // Căn giữa chữ
-errorLink.href = 'https://facebook.com/lapho111'; // Đường link dẫn tới Facebook
-errorLink.target = '_blank'; // Mở link trong tab mới
 
-// Đẩy các phần tử đã có lên một chút bằng cách thay đổi margin-top của container
-container.style.marginBottom = '20px';  // Thêm khoảng cách ở dưới container (giúp tạo khoảng cách cho nút Báo Lỗi)
+container.appendChild(errorLink);  // Thêm phần tử vào container
 
 
     }
