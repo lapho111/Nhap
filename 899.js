@@ -307,230 +307,233 @@
             }
         }, (checkboxes.length + radioGroups.length) * 300 + 200);
     }
-function createUI(taskURL) {
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.top = '10px';
-    container.style.left = '50%'; 
-    container.style.transform = 'translateX(-50%)';
-    container.style.backgroundColor = '#1a1a1a';
-    container.style.border = '1px solid #444'; 
-    container.style.padding = '10px';
-    container.style.zIndex = '9999';
-    container.style.width = '350px';
-    container.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.5)'; 
-    container.style.borderRadius = '10px';
 
-    const des = document.createElement('h4');
-    des.textContent = 'Welcome To Lạp Hộ';
-    des.style.margin = '0';
-    des.style.marginBottom = '10px';
-    des.style.fontSize = '10px';
-    des.style.fontStyle = 'italic';
-    des.style.textAlign = 'center';
-    des.style.backgroundImage = 'linear-gradient(90deg, red, orange, brown, green, blue, indigo, violet, indigo, blue, green, brown, orange, red)';
-    des.style.backgroundSize = '200% auto';
-    des.style.color = 'transparent';
-    des.style.backgroundClip = 'text';
-    des.style.webkitBackgroundClip = 'text';
-    des.style.animation = 'rainbowMove 5s linear infinite';
+    function createUI(taskURL) {
+        const container = document.createElement('div');
+        container.style.position = 'fixed';
+        container.style.botom = '0px';
+        container.style.left = 'calc(50%)'
+        container.style.transfom = 'translateX(-50%)'
+        container.style.right = '10px';
+        container.style.backgroundColor = '#f9f9f9';
+        container.style.border = '1px solid #ccc';
+        container.style.padding = '10px';
+        container.style.zIndex = '9999';
+        container.style.width = '350px';
+        container.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+        container.style.borderRadius = '10px';
+        const des = document.createElement('a');  // Sử dụng <a> thay vì <h4> để tạo liên kết
+des.textContent = 'Welcome To Lạp Hộ';
+des.style.margin = '0';
+des.style.marginBottom = '10px';
+des.style.fontSize = '10px';
+des.style.fontStyle = 'italic';
+des.style.textAlign = 'center';
+des.style.backgroundImage = 'linear-gradient(90deg, red, orange, brown, green, blue, indigo, violet, indigo, blue, green, brown, orange, red)';
+des.style.backgroundSize = '200% auto';
+des.style.color = '#ffffff'; 
+des.style.backgroundClip = 'text';
+des.style.webkitBackgroundClip = 'text';
+des.style.animation = 'rainbowMove 5s linear infinite';
+des.style.textDecoration = 'underline';  // Thêm dấu gạch chân dưới liên kết
 
-    const style = document.createElement('style');
-    style.textContent = `
-    @keyframes rainbowMove {
-        0% {
-            background-position: 0% 50%;
-        }
-        100% {
-            background-position: 100% 50%;
-        }
+// Đặt đường dẫn đến trang Facebook của bạn
+des.href = 'https://www.facebook.com/lapho111';
+
+const style = document.createElement('style');
+style.textContent = `
+@keyframes rainbowMove {
+    0% {
+        background-position: 0% 50%;
     }
-    `;
-    document.head.appendChild(style);
-
-    container.appendChild(des);
-
-    const title = document.createElement('h3');
-    title.textContent = 'URL Cần Vượt:';
-    title.style.margin = '0';
-    title.style.fontWeight = 'bold';
-    title.style.marginBottom = '10px';
-    title.style.fontSize = '16px';
-    title.style.color = '#ff4d4d';
-
-    container.appendChild(title);
-
-    const input = document.createElement('input');
-    input.readOnly = false;
-    input.placeholder = ' Để Yên URL Tự Nhập!';
-    input.style.width = '100%';
-    input.style.marginBottom = '10px';
-    input.style.padding = '8px';
-    input.style.fontSize = '14px';
-    input.style.backgroundColor = '#333';
-    input.style.color = '#fff'; 
-    input.style.border = '1px solid #555'; 
-    container.appendChild(input);
-
-    const url = document.createElement('h4');
-    url.textContent = 'URL nhận diện (OCR): ' + taskURL;
-    url.style.margin = '0';
-    url.style.marginBottom = '10px';
-    url.style.fontSize = '13px';
-    url.style.color = '#d4a373';
-
-    container.appendChild(url);
-
-    const checkboxRow = document.createElement('div');
-    checkboxRow.style.display = 'flex';
-    checkboxRow.style.alignItems = 'center';
-    checkboxRow.style.marginBottom = '10px';
-    checkboxRow.style.fontSize = '14px';
-    checkboxRow.style.color = '#e6b800'; 
-
-    const fetchCheckbox = document.createElement('input');
-    fetchCheckbox.type = 'checkbox';
-    fetchCheckbox.id = 'fetchCode';
-    fetchCheckbox.checked = GM_getValue('fetchCode', false);
-    fetchCheckbox.onchange = () => {
-        GM_setValue('fetchCode', fetchCheckbox.checked);
-    };
-
-    const fetchLabel = document.createElement('label');
-    fetchLabel.htmlFor = 'fetchCode';
-    fetchLabel.textContent = 'Auto chuyển trang';
-    fetchLabel.style.marginLeft = '5px';
-    fetchLabel.style.marginRight = '15px';
-
-    const fetchContainer = document.createElement('div');
-    fetchContainer.style.display = 'flex';
-    fetchContainer.style.alignItems = 'center';
-    fetchContainer.appendChild(fetchCheckbox);
-    fetchContainer.appendChild(fetchLabel);
-
-    const autoStartCheckbox = document.createElement('input');
-    autoStartCheckbox.type = 'checkbox';
-    autoStartCheckbox.id = 'autoStart';
-    autoStartCheckbox.checked = GM_getValue('autoStart', false);
-    autoStartCheckbox.onchange = () => {
-        GM_setValue('autoStart', autoStartCheckbox.checked);
-    };
-
-    const autoStartLabel = document.createElement('label');
-    autoStartLabel.htmlFor = 'autoStart';
-    autoStartLabel.textContent = 'Auto Bypass (90%)';
-    autoStartLabel.style.marginLeft = '5px';
-
-    const autoStartContainer = document.createElement('div');
-    autoStartContainer.style.display = 'flex';
-    autoStartContainer.style.alignItems = 'center';
-    autoStartContainer.appendChild(autoStartCheckbox);
-    autoStartContainer.appendChild(autoStartLabel);
-
-    checkboxRow.appendChild(fetchContainer);
-    checkboxRow.appendChild(autoStartContainer);
-
-    container.appendChild(checkboxRow);
-
-    const buttonRow = document.createElement('div');
-    buttonRow.style.display = 'flex';
-    buttonRow.style.justifyContent = 'space-between';
-    buttonRow.style.fontSize = '14px';
-
-    const startBtn = document.createElement('button');
-    startBtn.textContent = 'Bypass';
-    startBtn.style.flex = '1';
-    startBtn.style.padding = '7px';
-    startBtn.style.backgroundColor = '#4CAF50'; 
-    startBtn.style.color = '#fff';
-    startBtn.style.border = 'none';
-    startBtn.style.cursor = 'pointer';
-    startBtn.style.marginRight = '5px';
-    startBtn.style.borderRadius = '5px';
-
-    startBtn.onclick = async () => {
-        try {
-            startBtn.disabled = true;
-            input.readOnly = true;
-            const check = input.value || taskURL;
-            input.value = 'Đang xử lý...';
-            const code = await startBypass(check);
-
-            if (code) {
-                let countdown = 62;
-                const countdownInterval = setInterval(() => {
-                    input.value = `Vui lòng chờ: ${countdown} giây`;
-                    countdown--;
-                    if (countdown < 0) {
-                        clearInterval(countdownInterval);
-                        if (fetchCheckbox.checked) {
-                            input.value = "Code: " + code + " - Đang chuyển trang...";
-                            fetchResult(code);
-                        } else {
-                            input.value = "Code: " + code;
-                        }
-                        startBtn.disabled = false;
-                    }
-                }, 1000);
-            } else {
-                input.readOnly = false;
-                console.error("Không có mã trả về từ startBypass");
-                input.value = "Lỗi! Vui lòng xem lại URL.";
-            }
-
-            sessionStorage.removeItem("ymnclk");
-            localStorage.removeItem("codexn");
-        } catch (error) {
-            console.error("Lỗi khi gọi startBypass:", error);
-        }
-    };
-
-    buttonRow.appendChild(startBtn);
-
-    const reloadBtn = document.createElement('button');
-    reloadBtn.textContent = 'Đổi Nhiệm Vụ';
-    reloadBtn.style.flex = '1';
-    reloadBtn.style.padding = '7px';
-    reloadBtn.style.backgroundColor = '#F44336'; // Giữ màu đỏ
-    reloadBtn.style.color = '#fff';
-    reloadBtn.style.border = 'none';
-    reloadBtn.style.cursor = 'pointer';
-    reloadBtn.style.borderRadius = '5px';
-
-    reloadBtn.onclick = async () => {
-        input.readOnly = true;
-        input.value = 'Đang Đổi Nhiệm Vụ...';
-        doiNhiemvu();
-    };
-
-    buttonRow.appendChild(reloadBtn);
-    container.appendChild(buttonRow);
-
-    document.body.appendChild(container);
-
-    if (autoStartCheckbox.checked) {
-        startBtn.click();
+    100% {
+        background-position: 100% 50%;
     }
 }
+`;
+document.head.appendChild(style);
 
-const url = window.location.href;
-window.onload = () => {
-    if (url.includes('https://yeumoney.com/')) {
-        recognizeTrafficURL().then(taskURL => {
-            createUI(taskURL);
-        }).catch(error => {
-            console.error("Lỗi khi nhận diện URL:", error);
-            createUI("Lỗi! Tự nhập URL hoặc Reload");
-        });
-    } else if (url.includes('https://docs.google.com/spreadsheets/')) {
-        fetchGoogleSheetHyperlinks()
-            .then(data => {
-                if (data) {
-                    window.location.href = data;
+container.appendChild(des);  // Thêm phần tử vào container
+
+       
+        const title = document.createElement('h3');
+        title.textContent = 'URL Cần Vượt:';
+        title.style.margin = '0';
+        title.style.fontWeight = 'bold';
+        title.style.marginBottom = '10px';
+        title.style.fontSize = '16px';
+        title.style.color = 'darkred';
+        container.appendChild(title);
+
+        const input = document.createElement('input');
+        input.readOnly = false;
+        input.placeholder = ' Để Yên URL Tự Nhập!';
+        input.style.width = '100%';
+        input.style.marginBottom = '10px';
+        input.style.padding = '8px';
+        input.style.fontSize = '14px';
+        container.appendChild(input);
+
+        const url = document.createElement('h4');
+        url.textContent = 'URL nhận diện (OCR): ' + taskURL;
+        url.style.margin = '0';
+        url.style.marginBottom = '10px';
+        url.style.fontSize = '13px';
+        url.style.color = 'brown';
+
+        container.appendChild(url);
+
+        const checkboxRow = document.createElement('div');
+        checkboxRow.style.display = 'flex';
+        checkboxRow.style.alignItems = 'center';
+        checkboxRow.style.marginBottom = '10px';
+        checkboxRow.style.fontSize = '14px';
+        checkboxRow.style.color = 'chocolate';
+
+        const fetchCheckbox = document.createElement('input');
+        fetchCheckbox.type = 'checkbox';
+        fetchCheckbox.id = 'fetchCode';
+        fetchCheckbox.checked = GM_getValue('fetchCode', false);
+        fetchCheckbox.onchange = () => {
+            GM_setValue('fetchCode', fetchCheckbox.checked);
+        };
+
+        const fetchLabel = document.createElement('label');
+        fetchLabel.htmlFor = 'fetchCode';
+        fetchLabel.textContent = 'Auto chuyển trang';
+        fetchLabel.style.marginLeft = '5px';
+        fetchLabel.style.marginRight = '15px';
+
+        const fetchContainer = document.createElement('div');
+        fetchContainer.style.display = 'flex';
+        fetchContainer.style.alignItems = 'center';
+        fetchContainer.appendChild(fetchCheckbox);
+        fetchContainer.appendChild(fetchLabel);
+
+        const autoStartCheckbox = document.createElement('input');
+        autoStartCheckbox.type = 'checkbox';
+        autoStartCheckbox.id = 'autoStart';
+        autoStartCheckbox.checked = GM_getValue('autoStart', false);
+        autoStartCheckbox.onchange = () => {
+            GM_setValue('autoStart', autoStartCheckbox.checked);
+        };
+
+        const autoStartLabel = document.createElement('label');
+        autoStartLabel.htmlFor = 'autoStart';
+        autoStartLabel.textContent = 'Auto Bypass (90%)';
+        autoStartLabel.style.marginLeft = '5px';
+
+        const autoStartContainer = document.createElement('div');
+        autoStartContainer.style.display = 'flex';
+        autoStartContainer.style.alignItems = 'center';
+        autoStartContainer.appendChild(autoStartCheckbox);
+        autoStartContainer.appendChild(autoStartLabel);
+
+        checkboxRow.appendChild(fetchContainer);
+        checkboxRow.appendChild(autoStartContainer);
+
+        container.appendChild(checkboxRow);
+
+        const buttonRow = document.createElement('div');
+        buttonRow.style.display = 'flex';
+        buttonRow.style.justifyContent = 'space-between';
+        buttonRow.style.fontSize = '14px';
+
+        const startBtn = document.createElement('button');
+        startBtn.textContent = 'Bypass';
+        startBtn.style.flex = '1';
+        startBtn.style.padding = '7px';
+        startBtn.style.backgroundColor = '#4CAF50';
+        startBtn.style.color = '#fff';
+        startBtn.style.border = 'none';
+        startBtn.style.cursor = 'pointer';
+        startBtn.style.marginRight = '5px';
+        startBtn.style.borderRadius = '5px';
+
+        startBtn.onclick = async () => {
+            try {
+                startBtn.disabled = true;
+                input.readOnly = true;
+                const check = input.value || taskURL;
+                input.value = 'Đang xử lý...';
+                const code = await startBypass(check);
+
+                if (code) {
+                    let countdown = 62;
+                    const countdownInterval = setInterval(() => {
+                        input.value = `Vui lòng chờ: ${countdown} giây`;
+                        countdown--;
+                        if (countdown < 0) {
+                            clearInterval(countdownInterval);
+                            if (fetchCheckbox.checked) {
+                                input.value = "Code: " + code + " - Đang chuyển trang...";
+                                fetchResult(code);
+                            } else {
+                                input.value = "Code: " + code;
+                            }
+                            startBtn.disabled = false;
+                        }
+                    }, 1000);
+                } else {
+                    input.readOnly = false;
+                    console.error("Không có mã trả về từ startBypass");
+                    input.value = "Lỗi! Vui lòng xem lại URL.";
                 }
-            })
-            .catch(error => console.error("Lỗi khi gọi hàm:", error));
-    } else if (url.includes('https://docs.google.com/forms/')) {
-        completeGoogleForms();
+
+                sessionStorage.removeItem("ymnclk");
+                localStorage.removeItem("codexn");
+            } catch (error) {
+                console.error("Lỗi khi gọi startBypass:", error);
+            }
+        };
+
+        buttonRow.appendChild(startBtn);
+
+        const reloadBtn = document.createElement('button');
+        reloadBtn.textContent = 'Đổi Nhiệm Vụ';
+        reloadBtn.style.flex = '1';
+        reloadBtn.style.padding = '7px';
+        reloadBtn.style.backgroundColor = '#F44336';
+        reloadBtn.style.color = '#fff';
+        reloadBtn.style.border = 'none';
+        reloadBtn.style.cursor = 'pointer';
+        reloadBtn.style.borderRadius = '5px';
+
+        reloadBtn.onclick = async () => {
+            input.readOnly = true;
+            input.value = 'Đang Đổi Nhiệm Vụ...';
+            doiNhiemvu();
+        };
+
+        buttonRow.appendChild(reloadBtn);
+        container.appendChild(buttonRow);
+
+        document.body.appendChild(container);
+
+        if (autoStartCheckbox.checked) {
+            startBtn.click();
+        }
     }
-};
+        const url = window.location.href;
+        window.onload = () => {
+            if (url.includes('https://yeumoney.com/')) {
+                recognizeTrafficURL().then(taskURL => {
+                    createUI(taskURL);
+                }).catch(error => {
+                    console.error("Lỗi khi nhận diện URL:", error);
+                    createUI("Lỗi! Tự nhập URL hoặc Reload");
+                });
+            } else if (url.includes('https://docs.google.com/spreadsheets/')) {
+                fetchGoogleSheetHyperlinks()
+                    .then(data => {
+                        if (data) {
+                            window.location.href = data;
+                        }
+                })
+                    .catch(error => console.error("Lỗi khi gọi hàm:", error));
+            } else if (url.includes('https://docs.google.com/forms/')) {
+                completeGoogleForms();
+            }
+        };
+    }
+)();
