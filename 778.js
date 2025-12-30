@@ -101,33 +101,32 @@ function hasBigIntLike(v) {
 }
 function isTikTokAd(node, downgradeOps) {
   let score = 0;
+  // Duyệt để tìm các dấu hiệu
   iterateNode(node, (v, p, k) => {
     if (!p) return;
-    let decodedV = decodeIfBinary(v);
-    if (decodedV == null) return;
-    if (typeof decodedV === "string") {
-      let s = decodedV.toLowerCase();
-      // Nhãn quảng cáo (Tăng điểm lên 5)
-      if (/sponsored|promoted|advertisement|广告|được tài trợ/i.test(s)) {
-        score += 5; 
-        downgradeOps.push({ p, k, type: "text" });
-      }
-      // Các từ khóa thương mại (Tăng điểm)
-      if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now|mua ngay|tìm hiểu thêm/i.test(s)) {
-        score += 3;
-        downgradeOps.push({ p, k, type: "text" });
-      }
-      // Dấu hiệu link tracking (Rất mạnh)
-      if (s.includes("track") && s.includes("click")) score += 4;
-    }
-    // Kiểm tra các Field Name đặc thù của TikTok Ads
-    if (k && /ad_id|creative_id|campaign_id|is_ads/i.test(k)) {
+    // Kiểm tra Field Name (Key) - Đây là cách chính xác nhất
+    // Các key này thường chứa ID quảng cáo hoặc cờ đánh dấu Ad
+    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|ads_type/i.test(k)) {
       score += 4;
       downgradeOps.push({ p, k, type: "id" });
     }
+    let decodedV = decodeIfBinary(v);
+    if (decodedV && typeof decodedV === "string") {
+      let s = decodedV.toLowerCase();
+      // Chặn mọi nhãn liên quan đến tài trợ/quảng cáo
+      if (/sponsored|promoted|advertisement|广告|được tài trợ|ads?|promotion|suggested/i.test(s)) {
+        score += 5; 
+        downgradeOps.push({ p, k, type: "text" });
+      }
+      // Chặn các nút CTA mua sắm
+      if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now|mua ngay|tìm hiểu thêm|cài đặt ngay/i.test(s)) {
+        score += 3;
+        downgradeOps.push({ p, k, type: "text" });
+      }
+    }
   });
-  // Hạ ngưỡng xuống 4 để bắt quảng cáo gắt hơn
-  return score >= 4; 
+  // CHỈNH Ở ĐÂY: Hạ ngưỡng xuống 2 (Rất nhạy)
+  return score >= 2; 
 }
 function stripAds(root) {
   if (!root || typeof root !== "object") return;
