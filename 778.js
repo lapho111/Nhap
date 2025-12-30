@@ -101,32 +101,39 @@ function hasBigIntLike(v) {
 }
 function isTikTokAd(node, downgradeOps) {
   let score = 0;
-  // Duyệt để tìm các dấu hiệu
   iterateNode(node, (v, p, k) => {
     if (!p) return;
-    // Kiểm tra Field Name (Key) - Đây là cách chính xác nhất
-    // Các key này thường chứa ID quảng cáo hoặc cờ đánh dấu Ad
-    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|ads_type/i.test(k)) {
+    // 1. Kiểm tra KEY danh nghĩa (Đây là "tử huyệt" của quảng cáo app)
+    // Bổ sung thêm các key định danh quảng cáo của TikTok
+    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|ads_type|app_ad|brand_paid|is_sponsored/i.test(k)) {
       score += 4;
       downgradeOps.push({ p, k, type: "id" });
     }
     let decodedV = decodeIfBinary(v);
     if (decodedV && typeof decodedV === "string") {
       let s = decodedV.toLowerCase();
-      // Chặn mọi nhãn liên quan đến tài trợ/quảng cáo
-      if (/sponsored|promoted|advertisement|广告|được tài trợ|ads?|promotion|suggested/i.test(s)) {
+      // 2. Bắt nhãn văn bản (Cập nhật từ khóa bạn vừa nêu)
+      if (
+        /sponsored|promoted|advertisement|广告|được tài trợ/i.test(s) ||
+        /đối tác quan hệ trả phí|paid partnership|branded content|nhãn hàng tài trợ/i.test(s) ||
+        /cài đặt ngay|install nay|tải ứng dụng|mở app/i.test(s) // Chặn quảng cáo app Grab/Cake
+      ) {
         score += 5; 
         downgradeOps.push({ p, k, type: "text" });
       }
-      // Chặn các nút CTA mua sắm
+      // 3. Chặn các nút hành động (CTA)
       if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now|mua ngay|tìm hiểu thêm|cài đặt ngay/i.test(s)) {
         score += 3;
         downgradeOps.push({ p, k, type: "text" });
       }
+      // 4. Dấu hiệu link tải App (Thường thấy ở quảng cáo Grab/Cake)
+      if (s.includes("apple.com/app") || s.includes("play.google.com/store")) {
+          score += 4;
+      }
     }
   });
-  // CHỈNH Ở ĐÂY: Hạ ngưỡng xuống 2 (Rất nhạy)
-  return score >= 2; 
+  // Đặt ngưỡng nhạy mức 3 để đảm bảo không lọt lưới
+  return score >= 3; 
 }
 function stripAds(root) {
   if (!root || typeof root !== "object") return;
