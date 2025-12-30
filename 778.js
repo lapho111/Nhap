@@ -107,27 +107,27 @@ function isTikTokAd(node, downgradeOps) {
     if (decodedV == null) return;
     if (typeof decodedV === "string") {
       let s = decodedV.toLowerCase();
-      if (s.includes("sponsored") || s.includes("promoted") || s.includes("advertisement")) {
+      // Nhãn quảng cáo (Tăng điểm lên 5)
+      if (/sponsored|promoted|advertisement|广告|được tài trợ/i.test(s)) {
+        score += 5; 
+        downgradeOps.push({ p, k, type: "text" });
+      }
+      // Các từ khóa thương mại (Tăng điểm)
+      if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now|mua ngay|tìm hiểu thêm/i.test(s)) {
         score += 3;
         downgradeOps.push({ p, k, type: "text" });
       }
-      if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now/i.test(s)) {
-        score += 2;
-        downgradeOps.push({ p, k, type: "text" });
-      }
-      if (s.includes("product") && /\d{10,}/.test(s)) score += 3;
-      if (/https?:\/\//.test(s)) score += 2;
+      // Dấu hiệu link tracking (Rất mạnh)
+      if (s.includes("track") && s.includes("click")) score += 4;
     }
-    if (hasBigIntLike(v) && /ad|campaign|promo|product/i.test(k)) {
-      score += 2;
+    // Kiểm tra các Field Name đặc thù của TikTok Ads
+    if (k && /ad_id|creative_id|campaign_id|is_ads/i.test(k)) {
+      score += 4;
       downgradeOps.push({ p, k, type: "id" });
     }
-    if (typeof v === "boolean" && /is_ad|ad_flag|sponsored|promo/i.test(k)) {
-      score += 2;
-      downgradeOps.push({ p, k, type: "flag" });
-    }
   });
-  return score >= 6;
+  // Hạ ngưỡng xuống 4 để bắt quảng cáo gắt hơn
+  return score >= 4; 
 }
 function stripAds(root) {
   if (!root || typeof root !== "object") return;
