@@ -101,38 +101,35 @@ function hasBigIntLike(v) {
 }
 function isTikTokAd(node, downgradeOps) {
   let score = 0;
+  
   iterateNode(node, (v, p, k) => {
     if (!p) return;
-    // 1. Kiểm tra KEY danh nghĩa (Đây là "tử huyệt" của quảng cáo app)
-    // Bổ sung thêm các key định danh quảng cáo của TikTok
-    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|ads_type|app_ad|brand_paid|is_sponsored/i.test(k)) {
-      score += 4;
+    // 1. Chặn KEY định danh (Tăng cường cho Affiliate/Live)
+    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|is_sponsored|anchor_type|business_context/i.test(k)) {
+      // anchor_type thường là dấu hiệu của link sản phẩm/affiliate
+      score += 3;
       downgradeOps.push({ p, k, type: "id" });
     }
     let decodedV = decodeIfBinary(v);
     if (decodedV && typeof decodedV === "string") {
       let s = decodedV.toLowerCase();
-      // 2. Bắt nhãn văn bản (Cập nhật từ khóa bạn vừa nêu)
+      // 2. Chặn nội dung chữ (Thêm từ khóa Affiliate/Live)
       if (
         /sponsored|promoted|advertisement|广告|được tài trợ/i.test(s) ||
-        /đối tác quan hệ trả phí|paid partnership|branded content|nhãn hàng tài trợ/i.test(s) ||
-        /cài đặt ngay|install nay|tải ứng dụng|mở app/i.test(s) // Chặn quảng cáo app Grab/Cake
+        /đối tác quan hệ trả phí|paid partnership|branded content/i.test(s) ||
+        /giỏ hàng|tiktok shop|mua tại đây|liên kết sản phẩm|mã giảm giá/i.test(s) || // Chặn Affiliate
+        /livestream|đang phát trực tiếp|người bán|mua ngay trên live/i.test(s) // Chặn Live Shop
       ) {
-        score += 5; 
+        score += 4; 
         downgradeOps.push({ p, k, type: "text" });
       }
-      // 3. Chặn các nút hành động (CTA)
-      if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now|mua ngay|tìm hiểu thêm|cài đặt ngay/i.test(s)) {
-        score += 3;
-        downgradeOps.push({ p, k, type: "text" });
-      }
-      // 4. Dấu hiệu link tải App (Thường thấy ở quảng cáo Grab/Cake)
-      if (s.includes("apple.com/app") || s.includes("play.google.com/store")) {
-          score += 4;
+      // 3. Chặn các dấu hiệu kỹ thuật của TikTok Shop (anchor data)
+      if (s.includes("product_id") || s.includes("shop_id") || s.includes("anchor_id")) {
+        score += 4;
       }
     }
   });
-  // Đặt ngưỡng nhạy mức 3 để đảm bảo không lọt lưới
+  // Ngưỡng 3 là đủ để "diệt" cả Affiliate và Ads
   return score >= 3; 
 }
 function stripAds(root) {
