@@ -101,35 +101,41 @@ function hasBigIntLike(v) {
 }
 function isTikTokAd(node, downgradeOps) {
   let score = 0;
-  
   iterateNode(node, (v, p, k) => {
     if (!p) return;
-    // 1. Chặn KEY định danh (Tăng cường cho Affiliate/Live)
-    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|is_sponsored|anchor_type|business_context/i.test(k)) {
-      // anchor_type thường là dấu hiệu của link sản phẩm/affiliate
-      score += 3;
+    // 1. Quét KEY hệ thống (Bắt ID quảng cáo và loại hình Anchor bán hàng)
+    if (k && /ad_id|creative_id|campaign_id|is_ads|ad_label|is_sponsored|anchor_type|business_context|shop_id|product_id/i.test(k)) {
+      score += 4;
       downgradeOps.push({ p, k, type: "id" });
     }
     let decodedV = decodeIfBinary(v);
     if (decodedV && typeof decodedV === "string") {
       let s = decodedV.toLowerCase();
-      // 2. Chặn nội dung chữ (Thêm từ khóa Affiliate/Live)
+      // 2. Quét TỪ KHÓA hiển thị (Bao gồm cả Tiếng Việt và Tiếng Anh)
       if (
         /sponsored|promoted|advertisement|广告|được tài trợ/i.test(s) ||
-        /đối tác quan hệ trả phí|paid partnership|branded content/i.test(s) ||
-        /giỏ hàng|tiktok shop|mua tại đây|liên kết sản phẩm|mã giảm giá/i.test(s) || // Chặn Affiliate
-        /livestream|đang phát trực tiếp|người bán|mua ngay trên live/i.test(s) // Chặn Live Shop
+        /đối tác quan hệ trả phí|paid partnership|branded content|nhãn hàng/i.test(s) ||
+        /giỏ hàng|tiktok shop|mua tại đây|liên kết sản phẩm|mã giảm giá|deal hời/i.test(s) || // Affiliate
+        /livestream|đang phát trực tiếp|người bán|mua trên live|phòng live/i.test(s) // Live Shop
       ) {
-        score += 4; 
+        score += 5; 
         downgradeOps.push({ p, k, type: "text" });
       }
-      // 3. Chặn các dấu hiệu kỹ thuật của TikTok Shop (anchor data)
-      if (s.includes("product_id") || s.includes("shop_id") || s.includes("anchor_id")) {
-        score += 4;
+      // 3. Quét các nút CTA (Call to Action)
+      if (/shop[ _]now|get[ _]quote|view[ _]now|learn[ _]more|install[ _]now|mua ngay|tìm hiểu thêm|cài đặt ngay|xem chi tiết/i.test(s)) {
+        score += 3;
+        downgradeOps.push({ p, k, type: "text" });
       }
     }
+    // 4. Quét giá trị Boolean (Flag)
+    if (typeof v === "boolean" && (k.includes("is_ad") || k.includes("is_sponsored"))) {
+        if (v === true) {
+            score += 5;
+            downgradeOps.push({ p, k, type: "flag" });
+        }
+    }
   });
-  // Ngưỡng 3 là đủ để "diệt" cả Affiliate và Ads
+  // Hạ ngưỡng xuống 3 để không bỏ sót bất kỳ dấu hiệu nào
   return score >= 3; 
 }
 function stripAds(root) {
