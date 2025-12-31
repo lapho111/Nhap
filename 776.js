@@ -1,9 +1,8 @@
 /*
- * TeraBox – Clean Ad Block
+ * TeraBox – Clean Ad Block + Hide Premium Tab
  * - Chặn quảng cáo từ gốc (JSON)
+ * - Ẩn tab / banner mua Premium
  * - Không fake VIP
- * - Không động membership / privilege
- * - Tránh màn đen, tránh timeout
  */
 
 const url = $request.url;
@@ -16,6 +15,7 @@ let obj;
 try {
   obj = JSON.parse($response.body);
 } catch (e) {
+  // Không phải JSON thì bỏ qua
   $done({});
 }
 
@@ -31,15 +31,12 @@ if (
   url.includes("/feed") ||
   url.includes("/home")
 ) {
-  // các dạng ads phổ biến
   if (obj.data) obj.data = [];
   if (obj.ads) obj.ads = [];
   if (obj.ad) obj.ad = null;
   if (obj.ad_info) obj.ad_info = null;
   if (obj.ad_config) obj.ad_config = null;
   if (obj.adConfig) obj.adConfig = null;
-
-  // một số API dùng status
   if (obj.status !== undefined) obj.status = 0;
 }
 
@@ -56,14 +53,51 @@ if (Array.isArray(obj.list)) {
 }
 
 /* =========================
-   3. TẮT POPUP ÉP XEM ADS / MUA VIP
+   3. TẮT POPUP ÉP MUA PREMIUM
 ========================= */
 if (obj.popup) obj.popup = null;
 if (obj.popups) obj.popups = [];
 if (obj.dialog) obj.dialog = null;
+if (obj.paywall) obj.paywall = null;
+if (obj.upsell) obj.upsell = null;
 
 /* =========================
-   4. KHÔNG ĐỘNG PREMIUM
+   4. ẨN TAB / ENTRY PREMIUM
+========================= */
+
+// Bottom tab
+if (Array.isArray(obj.tab_list)) {
+  obj.tab_list = obj.tab_list.filter(t =>
+    !/vip|premium|member|pro|upgrade/i.test(
+      t.id || t.type || t.title || ""
+    )
+  );
+}
+
+// Một số bản dùng bottom_tabs
+if (Array.isArray(obj.bottom_tabs)) {
+  obj.bottom_tabs = obj.bottom_tabs.filter(t =>
+    !/vip|premium|member|pro|upgrade/i.test(
+      t.id || t.type || t.title || ""
+    )
+  );
+}
+
+// Entry / feature
+if (Array.isArray(obj.entry)) {
+  obj.entry = obj.entry.filter(e =>
+    !/vip|premium|member|pro|upgrade/i.test(
+      e.id || e.type || e.name || ""
+    )
+  );
+}
+
+// Banner upsell
+if (obj.vip_entry) obj.vip_entry = null;
+if (obj.premium_entry) obj.premium_entry = null;
+
+/* =========================
+   5. KHÔNG ĐỘNG PREMIUM
 ========================= */
 // Cố tình KHÔNG sửa:
 // vip, is_vip, membership, privilege, product
