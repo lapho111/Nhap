@@ -5384,40 +5384,64 @@ ${o[0][b][0]}`
              removeAd() {
                  this.message.adPlacements?.length && (this.message.adPlacements.length = 0), this.message.adSlots?.length && (this.message.adSlots.length = 0), delete this.message?.playbackTracking?.pageadViewthroughconversion
              }
+             removeAd() {
+                 this.message.adPlacements?.length && (this.message.adPlacements.length = 0), this.message.adSlots?.length && (this.message.adSlots.length = 0), delete this.message?.playbackTracking?.pageadViewthroughconversion
+             }
              addPlayAbility() {
-    if (!this.message.playabilityStatus) return;
+                 let e = this.message?.playabilityStatus?.miniPlayer?.miniPlayerRender;
+                 typeof e == "object" && (e.active = !0), typeof this.message.playabilityStatus == "object" && (this.message.playabilityStatus.backgroundPlayer = fe.create({
+                     backgroundPlayerRender: {
+                         active: !0
+                     }
+                 }))
 
-    // ÉP trạng thái phát
-    this.message.playabilityStatus.status = "OK";
-    this.message.playabilityStatus.reason = "";
-    this.message.playabilityStatus.playableInEmbed = true;
+ // ÉP trạng thái phát
+this.message.playabilityStatus.status = "OK";
+this.message.playabilityStatus.reason = "";
+this.message.playabilityStatus.playableInEmbed = true;
 
-    // MiniPlayer (PiP) – tạo nếu chưa có
-    this.message.playabilityStatus.miniPlayer ??= fe.create({
-        miniPlayerRender: { active: true }
+// MiniPlayer (PiP) – tạo nếu chưa có
+this.message.playabilityStatus.miniPlayer ??= fe.create({
+    miniPlayerRender: { active: true }
+});
+this.message.playabilityStatus.miniPlayer.miniPlayerRender.active = true;
+
+// Background Play
+this.message.playabilityStatus.backgroundPlayer = fe.create({
+    backgroundPlayerRender: { active: true }
+});
+
+// Gỡ Premium / Paid stream
+if (this.message.streamingData?.adaptiveFormats) {
+    this.message.streamingData.adaptiveFormats.forEach(f => {
+        f.requiresPurchase = false;
+        f.isPremium = false;
     });
-    this.message.playabilityStatus.miniPlayer.miniPlayerRender.active = true;
+}
 
-    // Background Play – luôn tạo mới
-    this.message.playabilityStatus.backgroundPlayer = fe.create({
-        backgroundPlayerRender: { active: true }
-    });
+// Gỡ block Shorts / pháp lý
+if (this.message.microformat?.playerMicroformatRenderer) {
+    const m = this.message.microformat.playerMicroformatRenderer;
+    m.blockedForLegalReasons = false;
+    m.blockedForHistory = false;
+    m.isShortsEligible = false;
+}
 
-    // Gỡ Premium / Paid stream
-    if (this.message.streamingData?.adaptiveFormats) {
-        this.message.streamingData.adaptiveFormats.forEach(f => {
-            f.requiresPurchase = false;
-            f.isPremium = false;
-        });
-    }
+// ====== PHẦN BỔ SUNG CHỐT HẠ ======
 
-    // Gỡ block Shorts / pháp lý
-    if (this.message.microformat?.playerMicroformatRenderer) {
-        const m = this.message.microformat.playerMicroformatRenderer;
-        m.blockedForLegalReasons = false;
-        m.blockedForHistory = false;
-        m.isShortsEligible = false;
-    }
+// Gỡ tracking gây PiP xoay tròn
+delete this.message.playbackTracking;
+
+// Ép video về VOD thường (không live / upcoming)
+if (this.message.videoDetails) {
+    this.message.videoDetails.isLive = false;
+    this.message.videoDetails.isUpcoming = false;
+    this.message.videoDetails.isPostLiveDvr = false;
+}
+
+// Ép streaming luôn sẵn sàng
+if (this.message.streamingData) {
+    this.message.streamingData.expiresInSeconds = "21540";
 }
 
              }
