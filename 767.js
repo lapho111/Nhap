@@ -5390,44 +5390,33 @@ ${o[0][b][0]}`
                      backgroundPlayerRender: {
                          active: !0
                      }
-                 }))
-// ===== HARD UNLOCK (KHÔNG SINH ADS) =====
+                        }));
 
-// 1. Gỡ purchase / premium sâu hơn
-if (this.message.streamingData) {
-    if (this.message.streamingData.adaptiveFormats) {
-        this.message.streamingData.adaptiveFormats.forEach(f => {
-            f.requiresPurchase && (f.requiresPurchase = false);
-            f.isPremium && (f.isPremium = false);
-            f.hasDrm && (f.hasDrm = false);
-        });
+    // ===== FIX XOAY NỀN – KHÔNG SINH ADS =====
+
+    // Chỉ đảm bảo embed được, KHÔNG reset status
+    if (this.message.playabilityStatus) {
+        this.message.playabilityStatus.playableInEmbed ??= true;
     }
 
-    // Ép stream coi như hợp lệ
-    this.message.streamingData.expiresInSeconds ??= "21540";
-}
+    // Gỡ errorScreen (nguyên nhân xoay 70% còn lại)
+    if (this.message.playabilityStatus?.errorScreen) {
+        delete this.message.playabilityStatus.errorScreen;
+    }
 
-// 2. Gỡ block pháp lý + Shorts ở tầng microformat
-if (this.message.microformat?.playerMicroformatRenderer) {
-    const m = this.message.microformat.playerMicroformatRenderer;
+    // Ép VOD, tránh logic live / shorts
+    if (this.message.videoDetails) {
+        this.message.videoDetails.isLive = false;
+        this.message.videoDetails.isUpcoming = false;
+        this.message.videoDetails.isPostLiveDvr = false;
+    }
 
-    m.blockedForLegalReasons && (m.blockedForLegalReasons = false);
-    m.blockedForHistory && (m.blockedForHistory = false);
+    // Giữ stream sống lâu – KHÔNG đụng tracking
+    if (this.message.streamingData) {
+        this.message.streamingData.expiresInSeconds ??= "21540";
+    }
 
-    // Shorts hay dùng cờ này để chặn PiP
-    m.isShortsEligible && (m.isShortsEligible = false);
-}
-
-// 3. Gỡ errorScreen nếu tồn tại (QUAN TRỌNG)
-if (this.message.playabilityStatus?.errorScreen) {
-    delete this.message.playabilityStatus.errorScreen;
-}
-
-// 4. Không reset status, chỉ đảm bảo embed được
-if (this.message.playabilityStatus) {
-    this.message.playabilityStatus.playableInEmbed ??= true;
-}
-
+ 
              }
              addTranslateCaption() {
                  let e = this.argument.captionLang;
