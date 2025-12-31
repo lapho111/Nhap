@@ -5423,7 +5423,11 @@ ${o[0][b][0]}`
     }
 
     // Gỡ tracking gây xoay
-    delete this.message.playbackTracking;
+    if (this.message.playbackTracking) {
+    delete this.message.playbackTracking.pageadViewthroughconversion;
+    delete this.message.playbackTracking.pageadParallelTracking;
+    delete this.message.playbackTracking.ptrackingUrl;
+}
 
     // Ép về VOD
     if (this.message.videoDetails) {
