@@ -5395,14 +5395,17 @@ ${o[0][b][0]}`
     // ===== FIX XOAY NỀN – KHÔNG SINH ADS =====
 
     // Chỉ đảm bảo embed được, KHÔNG reset status
-    if (this.message.playabilityStatus) {
-        this.message.playabilityStatus.playableInEmbed ??= true;
-    }
+    // Ép VOD, tránh logic live / shorts
+if (this.message.videoDetails) {
+    this.message.videoDetails.isLive = false;
+    this.message.videoDetails.isUpcoming = false;
+    this.message.videoDetails.isPostLiveDvr = false;
+}
 
-    // Gỡ errorScreen (nguyên nhân xoay 70% còn lại)
-    if (this.message.playabilityStatus?.errorScreen) {
-        delete this.message.playabilityStatus.errorScreen;
-    }
+// Giữ stream sống lâu – KHÔNG đụng tracking
+if (this.message.streamingData) {
+    this.message.streamingData.expiresInSeconds ??= "21540";
+}
 
     // Ép VOD, tránh logic live / shorts
     if (this.message.videoDetails) {
