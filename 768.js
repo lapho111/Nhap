@@ -5221,17 +5221,6 @@
                  })
              } else w.debug("use $.exit()"), w.exit()
          }
-         iterate(e = {}, t, n) {
-             let i = typeof e == "object" ? [e] : [];
-             for (; i.length;) {
-                 let r = i.pop(),
-                     c = Object.keys(r);
-                 for (let a of c) {
-                     if (a === t && n(r)) return;
-                     typeof r[a] == "object" && i.push(r[a])
-                 }
-             }
-         }
      };
 
      function Xr(l) {
@@ -5262,13 +5251,6 @@
              constructor(e = Pr, t = "Browse") {
                  super(e, t)
              }
-             async pure() {
-                 return this.iterate(this.message, "richItemContents", e => {
-                     let t = e.richItemContents;
-                     if (!Array.isArray(t)) return !1;
-                     for (let n = t.length - 1; n >= 0; n--) this.isAdvertise(t[n]) && (e.richItemContents.splice(n, 1), this.needProcess = !0)
-                 }), await this.translate(), this
-             }
              listUnknownFields(e) {
                  return f.list(e)
              }
@@ -5282,19 +5264,6 @@
                  if (this.blackNo.includes(t)) return !0;
                  let n = this.checkBufferIsAd(e);
                  return n ? this.blackNo.push(t) : this.whiteNo.push(t), this.needSave = !0, n
-             }
-             handleFieldEml(e) {
-                 let t = !1,
-                     n = "";
-                 return this.iterate(e, "renderInfo", i => {
-                     if (n = i.renderInfo?.layoutRender?.eml?.split("|")?.[0] ?? "", this.whiteEml.includes(n)) t = !1;
-                     else if (this.blackEml.includes(n) || /shorts(?!_pivot_item)/.test(n)) t = !0;
-                     else {
-                         let r = i?.videoInfo?.videoContext?.videoContent;
-                         r && (t = this.checkUnknownFiled(r), t ? this.blackEml.push(n) : this.whiteEml.push(n), this.needSave = !0)
-                     }
-                     return !0
-                 }), t
              }
              checkBufferIsAd(e) {
                  if (!e || e.data.length < 1e3) return !1;
@@ -5310,26 +5279,6 @@
                      a += c[t[a + r]] || r + 1
                  }
                  return !1
-             }
-             checkUnknownFiled(e) {
-                 return e ? this.listUnknownFields(e)?.some(n => this.checkBufferIsAd(n)) ?? !1 : !1
-             }
-             getBrowseId() {
-                 let e = "";
-                 return this.iterate(this.message?.responseContext, "key", t => {
-                     if (t.key === "browse_id") return e = t.value, !0
-                 }), e
-             }
-                 if (a.status === 200 && a.body) {
-                     let o = JSON.parse(a.body),
-                         s = " & Translated by Google",
-                         d = o[2].includes(r);
-                     n.text ? (n.text = o[0].map(g => d ? g[0] : g[1] + g[0] || "").join(`\r
-`), this.iterate(this.message, "footer", g => (g.footer.runs[0].text += s, !0))) : n.runs.length <= o[0].length && (n.runs.forEach((g, b) => {
-                         g.text = d ? o[0][b][0] : g.text + `
-${o[0][b][0]}`
-                     }), n.footerLabel += s), this.needProcess = !0
-                 }
              }
          },
          ge = class extends oe {
@@ -5418,38 +5367,7 @@ if (this.message.playabilityStatus) {
          Me = class extends G {
              constructor(e = Lr, t = "Setting") {
                  super(e, t)
-             }
-             async pure() {
-                 this.iterate(this.message.settingItems, "categoryId", t => {
-                     if (t.categoryId === 10135) {
-                         let n = ye.create({
-                             settingBooleanRenderer: {
-                                 itemId: 0,
-                                 enableServiceEndpoint: {
-                                     setClientSettingEndpoint: {
-                                         settingData: {
-                                             clientSettingEnum: {
-                                                 item: 151
-                                             },
-                                             boolValue: !0
-                                         }
-                                     }
-                                 },
-                                 disableServiceEndpoint: {
-                                     setClientSettingEndpoint: {
-                                         settingData: {
-                                             clientSettingEnum: {
-                                                 item: 151
-                                             },
-                                             boolValue: !1
-                                         }
-                                     }
-                                 }
-                             }
-                         });
-                         t.subSettings.push(n)
-                     }
-                 });
+             }}};
                  let e = J.create({
                      backgroundPlayBackSettingRenderer: {
                          backgroundPlayback: !0,
