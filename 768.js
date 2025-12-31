@@ -5109,9 +5109,6 @@
                  let t = e.response ?? e;
                  t.bodyBytes && (t.body = t.bodyBytes, delete t.bodyBytes), $done(t)
              }
-             decodeParams(e) {
-                 return typeof $argument == "string" && !$argument.includes("{{{") && Object.assign(e, JSON.parse($argument)), e
-             }
          },
          me = De;
      ce(me, "clientAdapter", {
@@ -5178,16 +5175,7 @@
          id: "sessionIndex",
          status: "statusCode"
      });
-     var sr = class extends me {
-         decodeParams(e) {
-             if (typeof $argument < "u")
-                 for (let t of Object.keys(e)) {
-                     let n = $argument?.[t];
-                     n !== void 0 && (e[t] = n)
-                 }
-             return e
-         }
-     };
+     var sr = class extends me;
      var w = v.getInstance("YouTube");
      var G = class {
          name;
