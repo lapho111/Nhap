@@ -5189,22 +5189,10 @@
          blackEml = ["inline_injection_entrypoint_layout.eml"];
          msgType;
          argument;
-         constructor(e, t) {
-             this.name = t, this.msgType = e, this.argument = this.decodeArgument(), w.isDebug = Boolean(this.argument.debug), w.debug(this.name);
-             let n = w.getJSON("YouTubeAdvertiseInfo");
-             w.debug(`currentVersion:  ${this.version}`), w.debug(`storedVersion:  ${n.version}`), n?.version === this.version && Object.assign(this, n)
-         }
-         decodeArgument() {
-             let e = {
-                 lyricLang: "off",
-                 captionLang: "off",
-                 blockUpload: !0,
-                 blockImmersive: !0,
-                 blockShorts: !1,
-                 debug: !1
-             };
-             return w.decodeParams(e)
-         }
+       constructor(e, t) {
+    this.name = t;
+    this.msgType = e;
+}
          fromBinary(e) {
              return e instanceof Uint8Array ? (this.message = this.msgType.fromBinary(e), w.debug(`bodyBytesSize: ${Math.floor(e.length/1024)} kb`), this) : (w.log("YouTube can not get binaryBody"), w.exit(), this)
          }
@@ -5332,19 +5320,6 @@
                      if (t.key === "browse_id") return e = t.value, !0
                  }), e
              }
-             async translate() {
-                 let e = this.argument.lyricLang?.trim();
-                 if (!(this.name === "Browse" && this.getBrowseId().startsWith("MPLYt")) || e === "off") return;
-                 let t = "",
-                     n, i = !1;
-                 if (this.iterate(this.message, "timedLyricsContent", o => (n = o.timedLyricsContent, t = o.timedLyricsContent.runs.map(s => s.text).join(`
-`), i = !0, !0)), i || this.iterate(this.message, "description", o => (n = o.description.runs[0], t = o.description.runs[0].text, i = !0, !0)), !i) return;
-                 let r = e.split("-")[0],
-                     c = $r(t, e),
-                     a = await w.fetch({
-                         method: "GET",
-                         url: c
-                     });
                  if (a.status === 200 && a.body) {
                      let o = JSON.parse(a.body),
                          s = " & Translated by Google",
@@ -5416,65 +5391,8 @@ if (this.message.playabilityStatus) {
     this.message.playabilityStatus.playableInEmbed ??= true;
 }
 
-             }
-             addTranslateCaption() {
-                 let e = this.argument.captionLang;
-                 e !== "off" && this.iterate(this.message, "captionTracks", t => {
-                     let n = t.captionTracks,
-                         i = t.audioTracks;
-                     if (Array.isArray(n)) {
-                         let c = {
-                                 [e]: 2,
-                                 en: 1
-                             },
-                             a = -1,
-                             o = 0;
-                         for (let s = 0; s < n.length; s++) {
-                             let d = n[s],
-                                 g = c[d.languageCode];
-                             g && g > a && (a = g, o = s), d.isTranslatable = !0
-                         }
-                         if (a !== 2) {
-                             let s = pe.create({
-                                 baseUrl: n[o].baseUrl + `&tlang=${e}`,
-                                 name: {
-                                     runs: [{
-                                         text: `@Enhance (${e})`
-                                     }]
-                                 },
-                                 vssId: `.${e}`,
-                                 languageCode: e
-                             });
-                             n.push(s)
-                         }
-                         if (Array.isArray(i)) {
-                             let s = a === 2 ? o : n.length - 1;
-                             for (let d of i) d.captionTrackIndices?.includes(s) || d.captionTrackIndices.push(s), d.defaultCaptionTrackIndex = s, d.captionsInitialState = 3
-                         }
-                     }
-                     let r = {
-                         de: "Deutsch",
-                         ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
-                         fr: "Fran\xE7ais",
-                         fil: "Filipino",
-                         ko: "\uD55C\uAD6D\uC5B4",
-                         ja: "\u65E5\u672C\u8A9E",
-                         en: "English",
-                         vi: "Ti\u1EBFng Vi\u1EC7t",
-                         "zh-Hant": "\u4E2D\u6587\uFF08\u7E41\u9AD4\uFF09",
-                         "zh-Hans": "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09",
-                         und: "@VirgilClyne"
-                     };
-                     return t.translationLanguages = Object.entries(r).map(([c, a]) => he.create({
-                         languageCode: c,
-                         languageName: {
-                             runs: [{
-                                 text: a
-                             }]
-                         }
-                     })), !0
-                 })
-             }
+             
+             
          },
          $e = class extends oe {
              constructor(e = Cr, t = "Search") {
@@ -5495,15 +5413,6 @@ if (this.message.playabilityStatus) {
          je = class extends G {
              constructor(e = Er, t = "Guide") {
                  super(e, t)
-             }
-             async pure() {
-                 let e = ["SPunlimited"];
-                 return this.argument.blockUpload && e.push("FEuploads"), this.argument.blockImmersive && e.push("FEmusic_immersive"), this.argument.blockShorts && e.push("FEshorts"), this.iterate(this.message, "rendererItems", t => {
-                     for (let n = t.rendererItems.length - 1; n >= 0; n--) {
-                         let i = t.rendererItems[n]?.iconRender?.browseId ?? t.rendererItems[n]?.labelRender?.browseId;
-                         i && e.includes(i) && (t.rendererItems.splice(n, 1), this.needProcess = !0)
-                     }
-                 }), this
              }
          },
          Me = class extends G {
