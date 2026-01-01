@@ -5281,12 +5281,36 @@
                  super(e, t)
              }
              async pure() {
-                 return this.iterate(this.message, "richItemContents", e => {
-                     let t = e.richItemContents;
-                     if (!Array.isArray(t)) return !1;
-                     for (let n = t.length - 1; n >= 0; n--) this.isAdvertise(t[n]) && (e.richItemContents.splice(n, 1), this.needProcess = !0)
-                 }), await this.translate(), this
-             }
+
+  // ====== [A] FAKE PREMIUM UI – THÊM Ở ĐÂY ======
+  const acc =
+    this.message?.account ||
+    this.message?.user ||
+    this.message?.profile;
+
+  if (acc) {
+    acc.isPremiumUser = true;
+    acc.hasPaidMembership = true;
+    acc.membershipStatus = "ACTIVE";
+  }
+
+  delete this.message?.premiumUpsellRenderer;
+  delete this.message?.subscribePremiumRenderer;
+  // =============================================
+
+  // ====== code gốc của mày ======
+  this.iterate(this.message, "richItemContents", e => {
+    let t = e.richItemContents;
+    if (!Array.isArray(t)) return !1;
+    for (let n = t.length - 1; n >= 0; n--)
+      this.isAdvertise(t[n]) &&
+        (e.richItemContents.splice(n, 1), this.needProcess = !0);
+  });
+
+  await this.translate();
+  return this;
+}
+
              listUnknownFields(e) {
                  return f.list(e)
              }
