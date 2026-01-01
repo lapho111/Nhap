@@ -1,4 +1,3 @@
-
  /******************************
  Tác Giả：Lạp Hộ
  Cập Nhật：2025-03-31
@@ -2439,6 +2438,14 @@
          },
          st = new xt,
          Ot = class extends y {
+             constructor() {
+                 super("youtube.response.browse.VideoContent", [{
+                     no: 465160965,
+                     name: "timedLyricsRender",
+                     kind: "message",
+                     T: () => lt
+                 }])
+             }
              create(e) {
                  let t = globalThis.Object.create(this.messagePrototype);
                  return e !== void 0 && h(this, t, e), t
@@ -2449,6 +2456,9 @@
                  for (; e.pos < c;) {
                      let [a, o] = e.tag();
                      switch (a) {
+                         case 465160965:
+                             r.timedLyricsRender = lt.internalBinaryRead(e, e.uint32(), n, r.timedLyricsRender);
+                             break;
                          default:
                              let s = n.readUnknownField;
                              if (s === "throw") throw new globalThis.Error(`Unknown field ${a} (wire type ${o}) for ${this.typeName}`);
@@ -2459,12 +2469,21 @@
                  return r
              }
              internalBinaryWrite(e, t, n) {
+                 e.timedLyricsRender && lt.internalBinaryWrite(e.timedLyricsRender, t.tag(465160965, u.LengthDelimited).fork(), n).join();
                  let i = n.writeUnknownFields;
                  return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
              }
          },
          ot = new Ot,
          Pt = class extends y {
+             constructor() {
+                 super("youtube.response.browse.TimedLyricsRender", [{
+                     no: 4,
+                     name: "timedLyricsContent",
+                     kind: "message",
+                     T: () => ct
+                 }])
+             }
              create(e) {
                  let t = globalThis.Object.create(this.messagePrototype);
                  return e !== void 0 && h(this, t, e), t
@@ -2475,6 +2494,9 @@
                  for (; e.pos < c;) {
                      let [a, o] = e.tag();
                      switch (a) {
+                         case 4:
+                             r.timedLyricsContent = ct.internalBinaryRead(e, e.uint32(), n, r.timedLyricsContent);
+                             break;
                          default:
                              let s = n.readUnknownField;
                              if (s === "throw") throw new globalThis.Error(`Unknown field ${a} (wire type ${o}) for ${this.typeName}`);
@@ -2485,12 +2507,27 @@
                  return r
              }
              internalBinaryWrite(e, t, n) {
+                 e.timedLyricsContent && ct.internalBinaryWrite(e.timedLyricsContent, t.tag(4, u.LengthDelimited).fork(), n).join();
                  let i = n.writeUnknownFields;
                  return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
              }
          },
          lt = new Pt,
          Ct = class extends y {
+             constructor() {
+                 super("youtube.response.browse.TimedLyricsContent", [{
+                     no: 1,
+                     name: "runs",
+                     kind: "message",
+                     repeat: 1,
+                     T: () => Y
+                 }, {
+                     no: 2,
+                     name: "footerLabel",
+                     kind: "scalar",
+                     T: 9
+                 }])
+             }
              create(e) {
                  let t = globalThis.Object.create(this.messagePrototype);
                  return t.runs = [], t.footerLabel = "", e !== void 0 && h(this, t, e), t
@@ -3432,7 +3469,12 @@
                      name: "playbackTracking",
                      kind: "message",
                      T: () => gn
-                 },{
+                 }, {
+                     no: 10,
+                     name: "captions",
+                     kind: "message",
+                     T: () => bn
+                 }, {
                      no: 68,
                      name: "adSlots",
                      kind: "message",
@@ -3456,6 +3498,12 @@
                          case 2:
                              r.playabilityStatus = pn.internalBinaryRead(e, e.uint32(), n, r.playabilityStatus);
                              break;
+                         case 9:
+                             r.playbackTracking = gn.internalBinaryRead(e, e.uint32(), n, r.playbackTracking);
+                             break;
+                         case 10:
+                             r.captions = bn.internalBinaryRead(e, e.uint32(), n, r.captions);
+                             break;
                          case 68:
                              r.adSlots.push(wn.internalBinaryRead(e, e.uint32(), n));
                              break;
@@ -3470,7 +3518,7 @@
              }
              internalBinaryWrite(e, t, n) {
                  for (let r = 0; r < e.adPlacements.length; r++) un.internalBinaryWrite(e.adPlacements[r], t.tag(7, u.LengthDelimited).fork(), n).join();
-                 e.playabilityStatus && pn.internalBinaryWrite(e.playabilityStatus, t.tag(2, u.LengthDelimited).fork(), n).join();
+                 e.playabilityStatus && pn.internalBinaryWrite(e.playabilityStatus, t.tag(2, u.LengthDelimited).fork(), n).join(), e.playbackTracking && gn.internalBinaryWrite(e.playbackTracking, t.tag(9, u.LengthDelimited).fork(), n).join(), e.captions && bn.internalBinaryWrite(e.captions, t.tag(10, u.LengthDelimited).fork(), n).join();
                  for (let r = 0; r < e.adSlots.length; r++) wn.internalBinaryWrite(e.adSlots[r], t.tag(68, u.LengthDelimited).fork(), n).join();
                  let i = n.writeUnknownFields;
                  return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
@@ -3884,6 +3932,15 @@
          },
          P = new Un,
          En = class extends y {
+             constructor() {
+                 super("youtube.response.player.Captions", [{
+                     no: 51621377,
+                     name: "playerCaptionsTrackListRenderer",
+                     kind: "message",
+                     jsonName: "playerCaptionsTracklistRenderer",
+                     T: () => kn
+                 }])
+             }
              create(e) {
                  let t = globalThis.Object.create(this.messagePrototype);
                  return e !== void 0 && h(this, t, e), t
@@ -3894,28 +3951,9 @@
                  for (; e.pos < c;) {
                      let [a, o] = e.tag();
                      switch (a) {
-      o                    default:
-                             let s = n.readUnknownField;
-                             if (s === "throw") throw new globalThis.Error(`Unknown field ${a} (wire type ${o}) for ${this.typeName}`);
-                             let d = e.skip(o);
-                             s !== !1 && (s === !0 ? f.onRead : s)(this.typeName, r, a, o, d)
-                     }
-                 }
-                 return r
-             }
-             internalBinaryWrite(e, t, n) {
-                 let i = n.writeUnknownFields;
-                 return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
-             }
-         },
-         bn = new En,
-         Ln = class extends y {
-             internalBinaryRead(e, t, n, i) {
-                 let r = i ?? this.create(),
-                     c = e.pos + t;
-                 for (; e.pos < c;) {
-                     let [a, o] = e.tag();
-                     switch (a) {
+                         case 51621377:
+                             r.playerCaptionsTrackListRenderer = kn.internalBinaryRead(e, e.uint32(), n, r.playerCaptionsTrackListRenderer);
+                             break;
                          default:
                              let s = n.readUnknownField;
                              if (s === "throw") throw new globalThis.Error(`Unknown field ${a} (wire type ${o}) for ${this.typeName}`);
@@ -3926,12 +3964,131 @@
                  return r
              }
              internalBinaryWrite(e, t, n) {
+                 e.playerCaptionsTrackListRenderer && kn.internalBinaryWrite(e.playerCaptionsTrackListRenderer, t.tag(51621377, u.LengthDelimited).fork(), n).join();
+                 let i = n.writeUnknownFields;
+                 return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
+             }
+         },
+         bn = new En,
+         Ln = class extends y {
+             constructor() {
+                 super("youtube.response.player.PlayerCaptionsTrackListRenderer", [{
+                     no: 1,
+                     name: "captionTracks",
+                     kind: "message",
+                     repeat: 1,
+                     T: () => pe
+                 }, {
+                     no: 2,
+                     name: "audioTracks",
+                     kind: "message",
+                     repeat: 1,
+                     T: () => Rn
+                 }, {
+                     no: 3,
+                     name: "translationLanguages",
+                     kind: "message",
+                     repeat: 1,
+                     T: () => he
+                 }, {
+                     no: 4,
+                     name: "defaultAudioTrackIndex",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 5
+                 }, {
+                     no: 6,
+                     name: "defaultCaptionTrackIndex",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 5
+                 }])
+             }
+             create(e) {
+                 let t = globalThis.Object.create(this.messagePrototype);
+                 return t.captionTracks = [], t.audioTracks = [], t.translationLanguages = [], e !== void 0 && h(this, t, e), t
+             }
+             internalBinaryRead(e, t, n, i) {
+                 let r = i ?? this.create(),
+                     c = e.pos + t;
+                 for (; e.pos < c;) {
+                     let [a, o] = e.tag();
+                     switch (a) {
+                         case 1:
+                             r.captionTracks.push(pe.internalBinaryRead(e, e.uint32(), n));
+                             break;
+                         case 2:
+                             r.audioTracks.push(Rn.internalBinaryRead(e, e.uint32(), n));
+                             break;
+                         case 3:
+                             r.translationLanguages.push(he.internalBinaryRead(e, e.uint32(), n));
+                             break;
+                         case 4:
+                             r.defaultAudioTrackIndex = e.int32();
+                             break;
+                         case 6:
+                             r.defaultCaptionTrackIndex = e.int32();
+                             break;
+                         default:
+                             let s = n.readUnknownField;
+                             if (s === "throw") throw new globalThis.Error(`Unknown field ${a} (wire type ${o}) for ${this.typeName}`);
+                             let d = e.skip(o);
+                             s !== !1 && (s === !0 ? f.onRead : s)(this.typeName, r, a, o, d)
+                     }
+                 }
+                 return r
+             }
+             internalBinaryWrite(e, t, n) {
+                 for (let r = 0; r < e.captionTracks.length; r++) pe.internalBinaryWrite(e.captionTracks[r], t.tag(1, u.LengthDelimited).fork(), n).join();
+                 for (let r = 0; r < e.audioTracks.length; r++) Rn.internalBinaryWrite(e.audioTracks[r], t.tag(2, u.LengthDelimited).fork(), n).join();
+                 for (let r = 0; r < e.translationLanguages.length; r++) he.internalBinaryWrite(e.translationLanguages[r], t.tag(3, u.LengthDelimited).fork(), n).join();
+                 e.defaultAudioTrackIndex !== void 0 && t.tag(4, u.Varint).int32(e.defaultAudioTrackIndex), e.defaultCaptionTrackIndex !== void 0 && t.tag(6, u.Varint).int32(e.defaultCaptionTrackIndex);
                  let i = n.writeUnknownFields;
                  return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
              }
          },
          kn = new Ln,
          Fn = class extends y {
+             constructor() {
+                 super("youtube.response.player.CaptionTrack", [{
+                     no: 1,
+                     name: "baseUrl",
+                     kind: "scalar",
+                     T: 9
+                 }, {
+                     no: 2,
+                     name: "name",
+                     kind: "message",
+                     T: () => W
+                 }, {
+                     no: 3,
+                     name: "vssId",
+                     kind: "scalar",
+                     T: 9
+                 }, {
+                     no: 4,
+                     name: "languageCode",
+                     kind: "scalar",
+                     T: 9
+                 }, {
+                     no: 5,
+                     name: "kind",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 9
+                 }, {
+                     no: 6,
+                     name: "rtl",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 8
+                 }, {
+                     no: 7,
+                     name: "isTranslatable",
+                     kind: "scalar",
+                     T: 8
+                 }])
+             }
              create(e) {
                  let t = globalThis.Object.create(this.messagePrototype);
                  return t.baseUrl = "", t.vssId = "", t.languageCode = "", t.isTranslatable = !1, e !== void 0 && h(this, t, e), t
@@ -3980,12 +4137,93 @@
          },
          pe = new Fn,
          Dn = class extends y {
+             constructor() {
+                 super("youtube.response.player.AudioTrack", [{
+                     no: 2,
+                     name: "captionTrackIndices",
+                     kind: "scalar",
+                     repeat: 2,
+                     T: 5
+                 }, {
+                     no: 3,
+                     name: "defaultCaptionTrackIndex",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 5
+                 }, {
+                     no: 4,
+                     name: "forcedCaptionTrackIndex",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 5
+                 }, {
+                     no: 5,
+                     name: "visibility",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 5
+                 }, {
+                     no: 6,
+                     name: "hasDefaultTrack",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 8
+                 }, {
+                     no: 7,
+                     name: "hasForcedTrack",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 8
+                 }, {
+                     no: 8,
+                     name: "audioTrackId",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 9
+                 }, {
+                     no: 11,
+                     name: "captionsInitialState",
+                     kind: "scalar",
+                     opt: !0,
+                     T: 5
+                 }])
+             }
+             create(e) {
+                 let t = globalThis.Object.create(this.messagePrototype);
+                 return t.captionTrackIndices = [], e !== void 0 && h(this, t, e), t
+             }
              internalBinaryRead(e, t, n, i) {
                  let r = i ?? this.create(),
                      c = e.pos + t;
                  for (; e.pos < c;) {
                      let [a, o] = e.tag();
                      switch (a) {
+                         case 2:
+                             if (o === u.LengthDelimited)
+                                 for (let g = e.int32() + e.pos; e.pos < g;) r.captionTrackIndices.push(e.int32());
+                             else r.captionTrackIndices.push(e.int32());
+                             break;
+                         case 3:
+                             r.defaultCaptionTrackIndex = e.int32();
+                             break;
+                         case 4:
+                             r.forcedCaptionTrackIndex = e.int32();
+                             break;
+                         case 5:
+                             r.visibility = e.int32();
+                             break;
+                         case 6:
+                             r.hasDefaultTrack = e.bool();
+                             break;
+                         case 7:
+                             r.hasForcedTrack = e.bool();
+                             break;
+                         case 8:
+                             r.audioTrackId = e.string();
+                             break;
+                         case 11:
+                             r.captionsInitialState = e.int32();
+                             break;
                          default:
                              let s = n.readUnknownField;
                              if (s === "throw") throw new globalThis.Error(`Unknown field ${a} (wire type ${o}) for ${this.typeName}`);
@@ -3996,6 +4234,8 @@
                  return r
              }
              internalBinaryWrite(e, t, n) {
+                 for (let r = 0; r < e.captionTrackIndices.length; r++) t.tag(2, u.Varint).int32(e.captionTrackIndices[r]);
+                 e.defaultCaptionTrackIndex !== void 0 && t.tag(3, u.Varint).int32(e.defaultCaptionTrackIndex), e.forcedCaptionTrackIndex !== void 0 && t.tag(4, u.Varint).int32(e.forcedCaptionTrackIndex), e.visibility !== void 0 && t.tag(5, u.Varint).int32(e.visibility), e.hasDefaultTrack !== void 0 && t.tag(6, u.Varint).bool(e.hasDefaultTrack), e.hasForcedTrack !== void 0 && t.tag(7, u.Varint).bool(e.hasForcedTrack), e.audioTrackId !== void 0 && t.tag(8, u.LengthDelimited).string(e.audioTrackId), e.captionsInitialState !== void 0 && t.tag(11, u.Varint).int32(e.captionsInitialState);
                  let i = n.writeUnknownFields;
                  return i !== !1 && (i == !0 ? f.onWrite : i)(this.typeName, e, t), t
              }
@@ -4966,7 +5206,7 @@
                  captionLang: "off",
                  blockUpload: !0,
                  blockImmersive: !0,
-                 blockShorts: !0,
+                 blockShorts: !1,
                  debug: !1
              };
              return w.decodeParams(e)
@@ -5032,39 +5272,96 @@
          for (let r = 0; r < e.length - 2; r += 3) i = e.charAt(r + 2), i = i >= t ? i.charCodeAt(0) - 87 : Number(i), i = e.charAt(r + 1) == n ? l >>> i : l << i, l = e.charAt(r) == n ? l + i & 4294967295 : l ^ i;
          return l
      }
+
+     function $r(l, e) {
+         return `https://translate.google.com/translate_a/single?client=gtx&sl=auto&tl=${e}&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&source=bh&ssel=0&tsel=0&kc=1&tk=${Xr(l)}&q=${encodeURIComponent(l)}`
+     }
      var oe = class extends G {
              constructor(e = Pr, t = "Browse") {
                  super(e, t)
              }
-            async pure() {
-    this.iterate(this.message, "richItemContents", e => {
-        let t = e.richItemContents;
-        if (Array.isArray(t)) {
-            for (let n = t.length - 1; n >= 0; n--) {
-                // Kiểm tra trực tiếp object thay vì stringify toàn bộ (giúp tiết kiệm CPU)
-                if (t[n]?.adSlotRenderer || JSON.stringify(t[n]).includes("adSlotRenderer")) {
-                    t.splice(n, 1);
-                    this.needProcess = !0;
-                }
-            }
-        }
-    });
-    return this;
-}
+             async pure() {
+                 return this.iterate(this.message, "richItemContents", e => {
+                     let t = e.richItemContents;
+                     if (!Array.isArray(t)) return !1;
+                     for (let n = t.length - 1; n >= 0; n--) this.isAdvertise(t[n]) && (e.richItemContents.splice(n, 1), this.needProcess = !0)
+                 }), await this.translate(), this
+             }
              listUnknownFields(e) {
                  return f.list(e)
              }
-            getBrowseId() {
-    let e = "";
-    // Chạy vòng lặp tìm browse_id trong responseContext
-    this.iterate(this.message?.responseContext, "key", t => {
-        if (t.key === "browse_id") {
-            e = t.value;
-            return !0; // Tìm thấy thì dừng vòng lặp ngay lập tức
-        }
-    });
-    return e; // Trả về kết quả cuối cùng
-}
+             isAdvertise(e) {
+                 let t = this.listUnknownFields(e)[0];
+                 return t ? this.handleFieldNo(t) : this.handleFieldEml(e)
+             }
+             handleFieldNo(e) {
+                 let t = e.no;
+                 if (this.whiteNo.includes(t)) return !1;
+                 if (this.blackNo.includes(t)) return !0;
+                 let n = this.checkBufferIsAd(e);
+                 return n ? this.blackNo.push(t) : this.whiteNo.push(t), this.needSave = !0, n
+             }
+             handleFieldEml(e) {
+                 let t = !1,
+                     n = "";
+                 return this.iterate(e, "renderInfo", i => {
+                     if (n = i.renderInfo?.layoutRender?.eml?.split("|")?.[0] ?? "", this.whiteEml.includes(n)) t = !1;
+                     else if (this.blackEml.includes(n) || /shorts(?!_pivot_item)/.test(n)) t = !0;
+                     else {
+                         let r = i?.videoInfo?.videoContext?.videoContent;
+                         r && (t = this.checkUnknownFiled(r), t ? this.blackEml.push(n) : this.whiteEml.push(n), this.needSave = !0)
+                     }
+                     return !0
+                 }), t
+             }
+             checkBufferIsAd(e) {
+                 if (!e || e.data.length < 1e3) return !1;
+                 let t = e.data,
+                     n = [112, 97, 103, 101, 97, 100],
+                     i = t.length,
+                     r = n.length,
+                     c = new Int32Array(256).fill(r + 1);
+                 for (let o = 0; o < r; o++) c[n[o]] = r - o;
+                 let a = 0;
+                 for (; a <= i - r;) {
+                     if (t[a] === n[0] && t[a + 1] === n[1] && t[a + 2] === n[2] && t[a + 3] === n[3] && t[a + 4] === n[4] && t[a + 5] === n[5]) return !0;
+                     a += c[t[a + r]] || r + 1
+                 }
+                 return !1
+             }
+             checkUnknownFiled(e) {
+                 return e ? this.listUnknownFields(e)?.some(n => this.checkBufferIsAd(n)) ?? !1 : !1
+             }
+             getBrowseId() {
+                 let e = "";
+                 return this.iterate(this.message?.responseContext, "key", t => {
+                     if (t.key === "browse_id") return e = t.value, !0
+                 }), e
+             }
+             async translate() {
+                 let e = this.argument.lyricLang?.trim();
+                 if (!(this.name === "Browse" && this.getBrowseId().startsWith("MPLYt")) || e === "off") return;
+                 let t = "",
+                     n, i = !1;
+                 if (this.iterate(this.message, "timedLyricsContent", o => (n = o.timedLyricsContent, t = o.timedLyricsContent.runs.map(s => s.text).join(`
+`), i = !0, !0)), i || this.iterate(this.message, "description", o => (n = o.description.runs[0], t = o.description.runs[0].text, i = !0, !0)), !i) return;
+                 let r = e.split("-")[0],
+                     c = $r(t, e),
+                     a = await w.fetch({
+                         method: "GET",
+                         url: c
+                     });
+                 if (a.status === 200 && a.body) {
+                     let o = JSON.parse(a.body),
+                         s = " & Translated by Google",
+                         d = o[2].includes(r);
+                     n.text ? (n.text = o[0].map(g => d ? g[0] : g[1] + g[0] || "").join(`\r
+`), this.iterate(this.message, "footer", g => (g.footer.runs[0].text += s, !0))) : n.runs.length <= o[0].length && (n.runs.forEach((g, b) => {
+                         g.text = d ? o[0][b][0] : g.text + `
+${o[0][b][0]}`
+                     }), n.footerLabel += s), this.needProcess = !0
+                 }
+             }
          },
          ge = class extends oe {
              constructor(e = ee, t = "Next") {
@@ -5075,6 +5372,9 @@
              constructor(e = re, t = "Player") {
                  super(e, t)
              }
+             async pure() {
+                 return this.removeAd(), this.addPlayAbility(), this.addTranslateCaption(), this.needProcess = !0, this
+             }
              removeAd() {
                  this.message.adPlacements?.length && (this.message.adPlacements.length = 0), this.message.adSlots?.length && (this.message.adSlots.length = 0), delete this.message?.playbackTracking?.pageadViewthroughconversion
              }
@@ -5084,8 +5384,77 @@
                      backgroundPlayerRender: {
                          active: !0
                      }
-                 }));
-                 }
+                 }))
+                 // Bỏ check Premium / PiP
+if (this.message.streamingData?.adaptiveFormats) {
+    this.message.streamingData.adaptiveFormats.forEach(f => f.requiresPurchase = false);
+}
+
+// Bỏ check blocked
+if (this.message.microformat?.playerMicroformatRenderer) {
+    const m = this.message.microformat.playerMicroformatRenderer;
+    m.blockedForLegalReasons = false;
+    m.blockedForHistory = false;
+}
+
+             }
+             addTranslateCaption() {
+                 let e = this.argument.captionLang;
+                 e !== "off" && this.iterate(this.message, "captionTracks", t => {
+                     let n = t.captionTracks,
+                         i = t.audioTracks;
+                     if (Array.isArray(n)) {
+                         let c = {
+                                 [e]: 2,
+                                 en: 1
+                             },
+                             a = -1,
+                             o = 0;
+                         for (let s = 0; s < n.length; s++) {
+                             let d = n[s],
+                                 g = c[d.languageCode];
+                             g && g > a && (a = g, o = s), d.isTranslatable = !0
+                         }
+                         if (a !== 2) {
+                             let s = pe.create({
+                                 baseUrl: n[o].baseUrl + `&tlang=${e}`,
+                                 name: {
+                                     runs: [{
+                                         text: `@Enhance (${e})`
+                                     }]
+                                 },
+                                 vssId: `.${e}`,
+                                 languageCode: e
+                             });
+                             n.push(s)
+                         }
+                         if (Array.isArray(i)) {
+                             let s = a === 2 ? o : n.length - 1;
+                             for (let d of i) d.captionTrackIndices?.includes(s) || d.captionTrackIndices.push(s), d.defaultCaptionTrackIndex = s, d.captionsInitialState = 3
+                         }
+                     }
+                     let r = {
+                         de: "Deutsch",
+                         ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+                         fr: "Fran\xE7ais",
+                         fil: "Filipino",
+                         ko: "\uD55C\uAD6D\uC5B4",
+                         ja: "\u65E5\u672C\u8A9E",
+                         en: "English",
+                         vi: "Ti\u1EBFng Vi\u1EC7t",
+                         "zh-Hant": "\u4E2D\u6587\uFF08\u7E41\u9AD4\uFF09",
+                         "zh-Hans": "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09",
+                         und: "@VirgilClyne"
+                     };
+                     return t.translationLanguages = Object.entries(r).map(([c, a]) => he.create({
+                         languageCode: c,
+                         languageName: {
+                             runs: [{
+                                 text: a
+                             }]
+                         }
+                     })), !0
+                 })
              }
          },
          $e = class extends oe {
@@ -5108,35 +5477,15 @@
              constructor(e = Er, t = "Guide") {
                  super(e, t)
              }
-            async pure() {
-    // Danh sách các Browse ID muốn ẩn
-    let e = ["SPunlimited"]; 
-    
-    // Kiểm tra xem người dùng có muốn chặn gì không (nếu có argument)
-    if (this.argument) {
-        if (this.argument.blockUpload) e.push("FEuploads");
-        if (this.argument.blockImmersive) e.push("FEmusic_immersive");
-        if (this.argument.blockShorts) e.push("FEshorts");
-    }
-
-    this.iterate(this.message, "rendererItems", t => {
-        let items = t.rendererItems;
-        if (!Array.isArray(items)) return;
-
-        for (let n = items.length - 1; n >= 0; n--) {
-            // Lấy Browse ID của từng mục trong Menu
-            let i = items[n]?.iconRender?.browseId ?? items[n]?.labelRender?.browseId;
-            
-            // Nếu khớp với danh sách đen thì xoá luôn
-            if (i && e.includes(i)) {
-                items.splice(n, 1);
-                this.needProcess = !0;
-            }
-        }
-    });
-    return this;
-}
-
+             async pure() {
+                 let e = ["SPunlimited"];
+                 return this.argument.blockUpload && e.push("FEuploads"), this.argument.blockImmersive && e.push("FEmusic_immersive"), this.argument.blockShorts && e.push("FEshorts"), this.iterate(this.message, "rendererItems", t => {
+                     for (let n = t.rendererItems.length - 1; n >= 0; n--) {
+                         let i = t.rendererItems[n]?.iconRender?.browseId ?? t.rendererItems[n]?.labelRender?.browseId;
+                         i && e.includes(i) && (t.rendererItems.splice(n, 1), this.needProcess = !0)
+                     }
+                 }), this
+             }
          },
          Me = class extends G {
              constructor(e = Lr, t = "Setting") {
@@ -5187,60 +5536,17 @@
                  return this.message.settingItems.push(e), this.needProcess = !0, this
              }
          },
-     var Ve = class extends G {
-    player;
-    next;
-    constructor(e = Fr, t = "Watch") {
-        super(e, t);
-        this.player = new be(); // Thêm dấu () cho chuẩn khởi tạo class
-        this.next = new ge();
-    }
-    async pure() {
-        if (!this.message.contents) return this; // Thêm check an toàn lỡ video bị lỗi
-        for (let e of this.message.contents) {
-            if (e.player) {
-                this.player.message = e.player;
-                await this.player.pure();
-                this.needProcess = !0;
-            }
-            if (e.next) {
-                this.next.message = e.next;
-                await this.next.pure();
-                this.needProcess = !0;
-            }
-        }
-        return this;
-    }
-};
-
-var be = class extends G {
-    constructor() {
-        // Tên class phải là be (viết thường)
-        super("youtube.response.player.Player", [
-            { no: 7, name: "adPlacements", kind: "message", repeat: 1, T: () => un },
-            { no: 2, name: "playabilityStatus", kind: "message", T: () => pn },
-            { no: 68, name: "adSlots", kind: "message", repeat: 1, T: () => wn }
-        ])
-    }
-
-    async pure() {
-        this.message.adPlacements = [];
-        this.message.adSlots = [];
-        if (this.message.playabilityStatus) {
-            this.message.playabilityStatus.status = 1;
-            // Ép YouTube bật tính năng chạy nền
-            this.message.playabilityStatus.backgroundPlayer = {
-                allEntity: { allowed: true }
-            };
-            delete this.message.playabilityStatus.reason;
-            delete this.message.playabilityStatus.messages;
-        }
-        this.needProcess = true;
-        return this;
-    }
-};
-
-
+         Ve = class extends G {
+             player;
+             next;
+             constructor(e = Fr, t = "Watch") {
+                 super(e, t), this.player = new be, this.next = new ge
+             }
+             async pure() {
+                 for (let e of this.message.contents) e.player && (this.player.message = e.player, await this.player.pure()), e.next && (this.next.message = e.next, await this.next.pure()), this.needProcess = !0;
+                 return this
+             }
+         };
      var Yr = new Map([
          ["browse", oe],
          ["next", ge],
