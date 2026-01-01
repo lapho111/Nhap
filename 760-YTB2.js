@@ -5213,6 +5213,34 @@
     }
 };
 
+var be = class extends G {
+    constructor() {
+        // Tên class phải là be (viết thường)
+        super("youtube.response.player.Player", [
+            { no: 7, name: "adPlacements", kind: "message", repeat: 1, T: () => un },
+            { no: 2, name: "playabilityStatus", kind: "message", T: () => pn },
+            { no: 68, name: "adSlots", kind: "message", repeat: 1, T: () => wn }
+        ])
+    }
+
+    async pure() {
+        this.message.adPlacements = [];
+        this.message.adSlots = [];
+        if (this.message.playabilityStatus) {
+            this.message.playabilityStatus.status = 1;
+            // Ép YouTube bật tính năng chạy nền
+            this.message.playabilityStatus.backgroundPlayer = {
+                allEntity: { allowed: true }
+            };
+            delete this.message.playabilityStatus.reason;
+            delete this.message.playabilityStatus.messages;
+        }
+        this.needProcess = true;
+        return this;
+    }
+};
+
+
      var Yr = new Map([
          ["browse", oe],
          ["next", ge],
